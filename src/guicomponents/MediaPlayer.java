@@ -47,10 +47,6 @@ public class MediaPlayer {
 		
 		window.add(panel);
 		window.setVisible(true);
-		
-		if (videoDirectory != null) {
-			mediaPlayer.playMedia(videoDirectory);
-		}
 	}
 	
 	public void initialisePlayer() {

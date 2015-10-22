@@ -23,7 +23,8 @@ public class ActionListeners {
 	private AddCommentary window;
 	BottomPanel bottompanel;
 	JPanel panel;
-	String videoDirectory;
+	String currentVideoDirectory;
+	String videoToMerge;
 	String audioDirectory;
 	public Rewind goBack = null;
 	EmbeddedMediaPlayer mediaPlayer;
@@ -128,7 +129,7 @@ public class ActionListeners {
 		});
 
 		// open file button - lets the user open a avi file to play in the media player 
-		// we have limited the files they can pick to avi only 
+		// we have limited the files they can pick mp4 only 
 		bottompanel.openFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				UIManager.put("FileChooser.readOnly", Boolean.TRUE);
@@ -136,8 +137,8 @@ public class ActionListeners {
 				fc.setFileFilter(new FileNameExtensionFilter(".mp4", "mp4"));
 				fc.showOpenDialog(panel);
 				if (fc.getSelectedFile() != null) {
-					videoDirectory = fc.getSelectedFile().getAbsolutePath();
-					mediaPlayer.playMedia(videoDirectory);
+					currentVideoDirectory = fc.getSelectedFile().getAbsolutePath();
+					mediaPlayer.playMedia(currentVideoDirectory);
 				}
 			}
 		});
@@ -156,30 +157,40 @@ public class ActionListeners {
 		// creates an audio object (swing worker) and executes the swing worker 
 		bottompanel.addCommentary.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (videoDirectory == null) {
-					JOptionPane.showMessageDialog(panel,
-							"Please choose a video first.");
-				} else {
 					if (mediaPlayer.isPlaying()) {
 						mediaPlayer.pause();
 					}
 					AudioVideoMerger addAudio;
-					UIManager.put("FileChooser.readOnly", Boolean.TRUE);
-					JFileChooser fc = new JFileChooser();
-					fc.setFileFilter(new FileNameExtensionFilter(".mp3", "mp3"));
-					fc.showOpenDialog(panel);
-					if (fc.getSelectedFile() != null) {
-						audioDirectory = fc.getSelectedFile().getAbsolutePath();
-						String saveAs = JOptionPane
-								.showInputDialog("Save file as: ");
-						addAudio = new AudioVideoMerger(audioDirectory, saveAs, mediaPlayer);
-						addAudio.execute();
-
-					}
+					getAudioandVideoDirectory();
+					String saveFileAs = JOptionPane
+							.showInputDialog("What would you like to call your new video file? ");
+					addAudio = new AudioVideoMerger(audioDirectory, saveFileAs, videoToMerge, mediaPlayer, panel);
+					addAudio.execute();
 				}
-			}
 		});
 
+	}
+	
+	public void getAudioandVideoDirectory() {
+		UIManager.put("FileChooser.readOnly", Boolean.TRUE);
+		JFileChooser audio = new JFileChooser();
+		audio.setDialogTitle("Please choose an mp3 file to merge");
+		audio.setFileFilter(new FileNameExtensionFilter(".mp3", "mp3"));
+		audio.showOpenDialog(panel);
+		if (audio.getSelectedFile() != null) {
+			audioDirectory = audio.getSelectedFile().getAbsolutePath();
+
+		}
+		
+		UIManager.put("FileChooser.readOnly", Boolean.TRUE);
+		JFileChooser video = new JFileChooser();
+		video.setDialogTitle("Please choose a video (mp4) file to merge");
+		video.setFileFilter(new FileNameExtensionFilter(".mp4", "mp4"));
+		video.showOpenDialog(panel);
+		if (video.getSelectedFile() != null) {
+			videoToMerge = video.getSelectedFile().getAbsolutePath();
+
+		}
 	}
 
 }

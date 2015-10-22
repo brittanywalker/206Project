@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -18,16 +19,21 @@ import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
  */
 public class AudioVideoMerger extends SwingWorker<Void, String> {
 
-	String audio;
-	String saveAs;
+	String audioDirectory;
+	String videoDirectory;
+	String saveFileAs;
 	EmbeddedMediaPlayer mediaPlayer;
+	JPanel panel;
+	String saveDirectory;
 
-	public AudioVideoMerger(String audio, String saveAs, EmbeddedMediaPlayer mediaPlayer) {
-		this.audio = audio;
-		this.saveAs = saveAs;
+	public AudioVideoMerger(String audioDirectory, String saveFileAs, String videoDirectory, EmbeddedMediaPlayer mediaPlayer, JPanel panel) {
+		this.audioDirectory = audioDirectory;
+		this.videoDirectory = videoDirectory;
+		this.saveFileAs = saveFileAs;
 		this.mediaPlayer = mediaPlayer;
+		this.panel = panel;
 
-	}
+	} 
 
 	/*
 	 * (non-Javadoc)
@@ -38,27 +44,36 @@ public class AudioVideoMerger extends SwingWorker<Void, String> {
 	 */
 	@Override
 	protected Void doInBackground() throws Exception {
-		
-		try {
-			
-			String merge = "ffmpeg -i " + MediaPlayer.videoDirectory + " -i "
-					+ audio + " -c:v copy -c:a aac -strict experimental -map 0:v:0 -map 1:a:0 " + home + "/BCVideo/" + saveAs + ".avi";
-			//String merge = "ffmpeg -i " + videoplayback.mp4 -i videoplayback.m4a -c:v copy -c:a copy output.mp4";
-			ProcessBuilder pb = new ProcessBuilder("/bin/bash", "-c", merge);
-			Process proc = pb.start();
-			proc.waitFor();
 
-		} catch (IOException | InterruptedException e) {
-			e.printStackTrace();
-		}
-		JOptionPane.showMessageDialog(null, "Your new video was saved to the BCVideo directory, which can be found in your home directory.");
+		JFileChooser saveNewVideo = new JFileChooser();
+		saveNewVideo.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		saveNewVideo.setAcceptAllFileFilterUsed(false);
+		
+		if (saveNewVideo.showSaveDialog(panel) == JFileChooser.APPROVE_OPTION) {
+			saveDirectory = saveNewVideo.getSelectedFile().getAbsolutePath();
+			try {
+				
+				//String merge = "ffmpeg -i " + videoDirectory + " -i "
+						//+ audioDirectory + " -c:v copy -c:a aac -strict experimental -map 0:v:0 -map 1:a:0 " + saveDirectory + "/" + saveFileAs + ".mp4";
+				String merge = "ffmpeg -i " + videoDirectory + " -i " + audioDirectory + " -c:v copy -c:a copy " + saveDirectory + "/" + saveFileAs + ".mp4";
+				System.out.println(merge);
+				ProcessBuilder pb = new ProcessBuilder("/bin/bash", "-c", merge);
+				Process proc = pb.start();
+				proc.waitFor();
+
+			} catch (IOException | InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+		} else {
+			JOptionPane.showMessageDialog(panel, "Must select a directory to save to");
+		}	
 		return null;
 	}
 
 	public void done() {
-		String home = System.getProperty("user.home");
-		mediaPlayer.playMedia(home + "/BCVideo/" + saveAs + ".mp4");
-
+		JOptionPane.showMessageDialog(null, "Your new video has been created");
+		mediaPlayer.playMedia(saveDirectory + "/" + saveFileAs + ".mp4");
 	}
 
 }
