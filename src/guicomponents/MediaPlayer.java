@@ -14,7 +14,7 @@ import uk.co.caprica.vlcj.player.embedded.DefaultFullScreenStrategy;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import uk.co.caprica.vlcj.player.embedded.FullScreenStrategy;
 import uk.co.caprica.vlcj.player.embedded.videosurface.CanvasVideoSurface;
-import videvox.ActionListeners;
+import vidivox.ActionListeners;
 
 public class MediaPlayer {
 

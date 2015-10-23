@@ -8,7 +8,7 @@ import java.lang.reflect.Field;
 
 import javax.swing.SwingWorker;
 
-import videvox.AddCommentary;
+import vidivox.AddCommentary;
 
 /*
  * BackGroundProcessor is the SwingWorker class that is used for running the Festival process
