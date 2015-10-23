@@ -31,6 +31,10 @@ public class MediaPlayer {
 	private Canvas canvas;
 	ActionListeners action;
 	BottomPanel btmpanel;
+	public static JMenu file;
+	public static JMenu festival;
+	public static JMenuItem txtSpeech;
+	public static JMenuItem open;
 
 	public static String videoDirectory;
 
@@ -82,12 +86,14 @@ public class MediaPlayer {
 	
 	public void addTopPanel() {
 		JMenuBar menu = new JMenuBar();
-		JMenu open = new JMenu("Open");
-		JMenu festival = new JMenu("Create");
-		JMenuItem txtSpeech = new JMenuItem("Text to Speech");
-		menu.add(open);
+		file = new JMenu("File");
+		open = new JMenuItem("Open");
+		festival = new JMenu("Create");
+		txtSpeech = new JMenuItem("Text to Speech");
+		menu.add(file);
 		menu.add(festival);
 		festival.add(txtSpeech);
+		file.add(open);
 		panel.add(menu, BorderLayout.NORTH);
 	}
 	

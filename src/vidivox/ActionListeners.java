@@ -95,7 +95,7 @@ public class ActionListeners {
 		// open file button - lets the user open a avi file to play in the media
 		// player
 		// we have limited the files they can pick mp4 only
-		bottompanel.openFile.addActionListener(new ActionListener() {
+		guicomponents.MediaPlayer.open.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				UIManager.put("FileChooser.readOnly", Boolean.TRUE);
 				JFileChooser fc = new JFileChooser();
@@ -110,7 +110,7 @@ public class ActionListeners {
 
 		// create commentary button - lets the user type in words to create new
 		// voice overs, as well as test them before saving
-		bottompanel.createCommentary.addActionListener(new ActionListener() {
+		guicomponents.MediaPlayer.txtSpeech.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (mediaPlayer.isPlaying()) {
 					mediaPlayer.pause();

@@ -1,20 +1,26 @@
 package guicomponents;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JSlider;
+import javax.swing.Painter;
 import javax.swing.Timer;
+import javax.swing.UIDefaults;
 
 import uk.co.caprica.vlcj.binding.LibVlcConst;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
@@ -109,8 +115,8 @@ public class BottomPanel {
 
 	public void positionPanelComponents() {
 		progressBar = new JProgressBar();
-		currentTime = new JLabel("--:--  ");
-		endTime = new JLabel("  --:--");
+		currentTime = new JLabel(" --:-- ");
+		endTime = new JLabel(" --:-- ");
 	}
 
 	public void buttonPanelCharacteristics() {
@@ -121,12 +127,14 @@ public class BottomPanel {
 		play.setToolTipText("Play/Pause");
 		fullScreen.setPreferredSize(new Dimension(50, 50));
 		fullScreen.setToolTipText("FullScreen");
-
+		
 		volume.setOrientation(JSlider.HORIZONTAL);
 		volume.setMinimum(LibVlcConst.MIN_VOLUME);
 		volume.setMaximum(LibVlcConst.MAX_VOLUME);
 		volume.setPreferredSize(new Dimension(100, 50));
-		volume.setBackground(Color.WHITE);
+		volume.setOpaque(true);
+		volume.setBackground(Color.darkGray);
+		volume.setForeground(Color.WHITE);
 		volume.setToolTipText("Change Volume");
 
 		openFile.setToolTipText("Choose a video to play :D");
@@ -143,8 +151,12 @@ public class BottomPanel {
 		progressBar.setMinimum(0);
 		progressBar.setValue(0);
 		progressBar.setBackground(Color.lightGray);
+		currentTime.setOpaque(true);
 		currentTime.setBackground(Color.darkGray);
+		currentTime.setForeground(Color.WHITE);
+		endTime.setOpaque(true);
 		endTime.setBackground(Color.darkGray);
+		endTime.setForeground(Color.WHITE);
 	}
 
 	public void buttonPanelLayout() {
