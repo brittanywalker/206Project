@@ -6,6 +6,9 @@ import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -26,6 +29,8 @@ public class MediaPlayer {
 
 	private JPanel panel;
 	private Canvas canvas;
+	ActionListeners action;
+	BottomPanel btmpanel;
 
 	public static String videoDirectory;
 
@@ -37,13 +42,14 @@ public class MediaPlayer {
 	public MediaPlayer() {
 
 		window = new JFrame();
-		window.setTitle("VIDEVOX");
+		window.setTitle("Vidivox");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setBounds(500, 200, 853, 637);
-		window.setBackground(Color.WHITE);
+		window.setBackground(Color.darkGray);
 		
 		initialisePlayer();
 		createPanel();
+		action = new ActionListeners(btmpanel, panel, mediaPlayer);
 		
 		window.add(panel);
 		window.setVisible(true);
@@ -52,8 +58,8 @@ public class MediaPlayer {
 	public void initialisePlayer() {
 		
 		canvas = new Canvas();
-		canvas.setBounds(0, 0, 853, 600);
-		canvas.setBackground(Color.WHITE);
+		//canvas.setBounds(0, 0, 853, 600);
+		canvas.setBackground(Color.darkGray);
 
 		mediaPlayerFactory = new MediaPlayerFactory();
 		fullScreenStrategy = new DefaultFullScreenStrategy(window);
@@ -65,13 +71,25 @@ public class MediaPlayer {
 	public void createPanel() {
 		
 		panel = new JPanel();
-		panel.setBackground(Color.WHITE);
+		panel.setBackground(Color.darkGray);
 		panel.setBorder(new EmptyBorder(4, 4, 4, 4));
 		panel.setLayout(new BorderLayout());
 		panel.add(canvas, BorderLayout.CENTER);
 
-		BottomPanel btmpanel = new BottomPanel(panel, mediaPlayer);
-		ActionListeners action = new ActionListeners(btmpanel, panel, mediaPlayer);	
+		btmpanel = new BottomPanel(panel, mediaPlayer);
+		addTopPanel();
 	}
+	
+	public void addTopPanel() {
+		JMenuBar menu = new JMenuBar();
+		JMenu open = new JMenu("Open");
+		JMenu festival = new JMenu("Create");
+		JMenuItem txtSpeech = new JMenuItem("Text to Speech");
+		menu.add(open);
+		menu.add(festival);
+		festival.add(txtSpeech);
+		panel.add(menu, BorderLayout.NORTH);
+	}
+	
 
 }

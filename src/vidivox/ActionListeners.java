@@ -65,11 +65,13 @@ public class ActionListeners {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (mediaPlayer.isPlaying()) { // playing
-					bottompanel.play.setIcon(bottompanel.pauseImage);
-				} else {
 					bottompanel.play.setIcon(bottompanel.playImage);
+					mediaPlayer.pause();
+				} else {
+					bottompanel.play.setIcon(bottompanel.pauseImage);
+					mediaPlayer.play();
 				}
-				mediaPlayer.play();
+				
 			}
 		});
 

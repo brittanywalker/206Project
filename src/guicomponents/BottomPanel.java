@@ -73,7 +73,7 @@ public class BottomPanel {
 
 	public void createButtonPanel() {
 		buttonPanel.setLayout(new FlowLayout());
-		buttonPanel.setBackground(Color.WHITE);
+		buttonPanel.setBackground(Color.darkGray);
 		buttonPanelComponents();
 		buttonPanelCharacteristics();
 		buttonPanelLayout();
@@ -109,32 +109,32 @@ public class BottomPanel {
 
 	public void positionPanelComponents() {
 		progressBar = new JProgressBar();
-		currentTime = new JLabel("--:--");
-		endTime = new JLabel("--:--");
+		currentTime = new JLabel("--:--  ");
+		endTime = new JLabel("  --:--");
 	}
 
 	public void buttonPanelCharacteristics() {
 
-		mute.setPreferredSize(new Dimension(25, 25));
+		mute.setPreferredSize(new Dimension(50, 50));
 		mute.setToolTipText("Mute");
-		play.setPreferredSize(new Dimension(25, 25));
+		play.setPreferredSize(new Dimension(50, 50));
 		play.setToolTipText("Play/Pause");
-		fullScreen.setPreferredSize(new Dimension(25, 25));
+		fullScreen.setPreferredSize(new Dimension(50, 50));
 		fullScreen.setToolTipText("FullScreen");
 
 		volume.setOrientation(JSlider.HORIZONTAL);
 		volume.setMinimum(LibVlcConst.MIN_VOLUME);
 		volume.setMaximum(LibVlcConst.MAX_VOLUME);
-		volume.setPreferredSize(new Dimension(100, 25));
+		volume.setPreferredSize(new Dimension(100, 50));
 		volume.setBackground(Color.WHITE);
 		volume.setToolTipText("Change Volume");
 
 		openFile.setToolTipText("Choose a video to play :D");
-		openFile.setPreferredSize(new Dimension(25, 25));
+		openFile.setPreferredSize(new Dimension(50, 50));
 		createCommentary.setToolTipText("Create a spoken commentary");
-		createCommentary.setPreferredSize(new Dimension(25, 25));
+		createCommentary.setPreferredSize(new Dimension(50, 50));
 		addCommentary.setToolTipText("Add a commentary to your video");
-		addCommentary.setPreferredSize(new Dimension(25, 25));
+		addCommentary.setPreferredSize(new Dimension(50, 50));
 
 	}
 
@@ -142,8 +142,9 @@ public class BottomPanel {
 
 		progressBar.setMinimum(0);
 		progressBar.setValue(0);
-		currentTime.setBackground(Color.WHITE);
-		endTime.setBackground(Color.WHITE);
+		progressBar.setBackground(Color.lightGray);
+		currentTime.setBackground(Color.darkGray);
+		endTime.setBackground(Color.darkGray);
 	}
 
 	public void buttonPanelLayout() {
