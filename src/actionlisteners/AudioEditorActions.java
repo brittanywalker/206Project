@@ -13,6 +13,7 @@ import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import guicomponents.AudioEditor;
+import guicomponents.EditingTable;
 import vidivox.AudioFile;
 
 public class AudioEditorActions {
@@ -26,6 +27,7 @@ public class AudioEditorActions {
 	AudioFile audioFile;
 	String startMins;
 	String startSecs;
+	EditingTable editor;
 
 	public AudioEditorActions(JFrame frame) {
 		this.frame = frame;
@@ -33,6 +35,7 @@ public class AudioEditorActions {
 		addAudioListener();
 		checkBoxListener();
 		audioFiles = new ArrayList<AudioFile>();
+		editor = new EditingTable(audioFiles);
 	}
 
 	public void openActionListeners() {

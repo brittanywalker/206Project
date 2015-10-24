@@ -17,6 +17,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import guicomponents.AddCommentary;
 import guicomponents.AudioEditor;
 import guicomponents.BottomPanel;
+import guicomponents.EditingTable;
 import guicomponents.MediaPlayer;
 import swingworker.AudioVideoMerger;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
@@ -111,6 +112,7 @@ public class MediaPlayerActions {
 					bottompanel.openAudioEditor.setText("Close Audio Editor");
 				} else {
 					editAudio.audioEditor.setVisible(false);
+					EditingTable.editingPanel.setVisible(false);
 					bottompanel.openAudioEditor.setText("Open Audio Editor");
 				}
 			}
