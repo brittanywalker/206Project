@@ -109,10 +109,13 @@ public class BottomPanel {
 
 		mute.setPreferredSize(new Dimension(50, 50));
 		mute.setToolTipText("Mute");
+		mute.setBackground(Color.darkGray);
 		play.setPreferredSize(new Dimension(50, 50));
 		play.setToolTipText("Play/Pause");
+		play.setBackground(Color.darkGray);
 		fullScreen.setPreferredSize(new Dimension(50, 50));
 		fullScreen.setToolTipText("FullScreen");
+		fullScreen.setBackground(Color.darkGray);
 		
 		volume.setOrientation(JSlider.HORIZONTAL);
 		volume.setMinimum(LibVlcConst.MIN_VOLUME);
@@ -125,8 +128,7 @@ public class BottomPanel {
 		
 		openAudioEditor.setToolTipText("Use this to add mp3 files to a video of your choice");
 		openAudioEditor.setPreferredSize(new Dimension(50, 50));
-		openAudioEditor.setBackground(Color.darkGray);
-		openAudioEditor.setForeground(Color.WHITE);
+		openAudioEditor.setForeground(Color.darkGray);
 
 	}
 
@@ -135,6 +137,7 @@ public class BottomPanel {
 		progressBar.setMinimum(0);
 		progressBar.setValue(0);
 		progressBar.setBackground(Color.lightGray);
+		progressBar.setForeground(Color.BLUE);
 		currentTime.setOpaque(true);
 		currentTime.setBackground(Color.darkGray);
 		currentTime.setForeground(Color.WHITE);

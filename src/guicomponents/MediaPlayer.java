@@ -23,7 +23,7 @@ public class MediaPlayer {
 	private MediaPlayerFactory mediaPlayerFactory;
 	FullScreenStrategy fullScreenStrategy;
 	public EmbeddedMediaPlayer mediaPlayer;
-	JFrame window;
+	public static JFrame window;
 
 	private JPanel panel;
 	private Canvas canvas;
@@ -35,6 +35,7 @@ public class MediaPlayer {
 	public static JMenu festival;
 	public static JMenuItem txtSpeech;
 	public static JMenuItem open;
+	public static JMenuItem save;
 
 	public static String videoDirectory;
 
@@ -48,7 +49,7 @@ public class MediaPlayer {
 		window = new JFrame();
 		window.setTitle("Vidivox");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setBounds(500, 100, 850, 550);
+		window.setBounds(500, 100, 800, 580);
 		window.setBackground(Color.darkGray);
 		
 		initialisePlayer();
@@ -86,12 +87,14 @@ public class MediaPlayer {
 		menu = new JMenuBar();
 		file = new JMenu("File");
 		open = new JMenuItem("Open");
+		save = new JMenuItem("Save Customised Video");
 		festival = new JMenu("Create");
 		txtSpeech = new JMenuItem("Text to Speech");
 		menu.add(file);
 		menu.add(festival);
 		festival.add(txtSpeech);
 		file.add(open);
+		file.add(save);
 		panel.add(menu, BorderLayout.NORTH);
 	}
 	

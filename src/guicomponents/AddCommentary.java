@@ -35,6 +35,7 @@ public class AddCommentary {
 	public static JButton btnSave;
 	JButton btnClose;
 	JLabel lblMaxWords;
+	Text2SpeechActions actionListeners;
 
 	/**
 	 * The constructor makes the frame and attaches a panel to it. Three methods are
@@ -42,17 +43,16 @@ public class AddCommentary {
 	 */
 	public AddCommentary() {
 		
-		commentary = new JFrame();
+		commentary = new JFrame("Create an .mp3 file from written text");
 		commentary.setBounds(100, 100, 450, 295);
 		contentPane = new JPanel();
-		contentPane.setBackground(Color.WHITE);
+		contentPane.setBackground(Color.darkGray);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		commentary.setContentPane(contentPane);
 		contentPane.setLayout(null);
-
 		createFields();
 		createLayout();
-		Text2SpeechActions actionListeners = new Text2SpeechActions(commentary);
+		actionListeners = new Text2SpeechActions(contentPane);
+		commentary.setContentPane(contentPane);
 		commentary.setVisible(true);
 	}
 
@@ -67,28 +67,23 @@ public class AddCommentary {
 	 */
 	public void createFields() {
 
-		lblAddCommentary = new JLabel("Add Commentary");
-		lblAddCommentary.setFont(new Font("DejaVu Sans Condensed", Font.BOLD, 16));
-		lblAddCommentary.setBounds(155, 29, 145, 28);
-
 		textArea = new JTextArea();
 		textArea.setBounds(60, 80, 320, 100);
 		textArea.setLineWrap(true);
 		textArea.setWrapStyleWord(true);
-		textArea.setBackground(Color.LIGHT_GRAY);
+		textArea.setBackground(Color.WHITE);
+		textArea.setForeground(Color.darkGray);
 
 		speakImage = new ImageIcon("buttons/speak.png");
 		stopImage = new ImageIcon("buttons/stop.png");
 		btnSpeak = new JButton(speakImage);
 		btnSpeak.setBounds(250, 210, 50, 50);
+		btnSpeak.setBackground(Color.darkGray);
 
 		saveImage = new ImageIcon("buttons/Save.png");
 		btnSave = new JButton(saveImage);
 		btnSave.setBounds(309, 210, 50, 50);
-		
-		lblMaxWords = new JLabel("Max. words 30");
-		lblMaxWords.setFont(new Font("DejaVu Sans Condensed", Font.BOLD, 11));
-		lblMaxWords.setBounds(70, 179, 112, 15);
+		btnSave.setBackground(Color.darkGray);
 
 	}
 
@@ -98,11 +93,9 @@ public class AddCommentary {
 	 */
 	public void createLayout() {
 
-		contentPane.add(lblAddCommentary);
 		contentPane.add(textArea);
 		contentPane.add(btnSpeak);
-		contentPane.add(btnSave);	
-		contentPane.add(lblMaxWords);
+		contentPane.add(btnSave);
 
 	}
 }

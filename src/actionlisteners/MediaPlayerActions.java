@@ -6,6 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.UIManager;
@@ -16,6 +17,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import guicomponents.AddCommentary;
 import guicomponents.AudioEditor;
 import guicomponents.BottomPanel;
+import guicomponents.MediaPlayer;
+import swingworker.AudioVideoMerger;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
 public class MediaPlayerActions {
@@ -34,11 +37,12 @@ public class MediaPlayerActions {
 		this.bottompanel = btmpanel;
 		this.panel = panel;
 		this.mediaPlayer = mediaPlayer;
-		createListeners();
+		bottomPanelListeners();
+		topPanelListeners();
 
 	}
 
-	public void createListeners() {
+	public void bottomPanelListeners() {
 
 		// mute button - switches between muting and unmuting of the video,
 		// changing icons also
@@ -68,7 +72,7 @@ public class MediaPlayerActions {
 					bottompanel.play.setIcon(bottompanel.pauseImage);
 					mediaPlayer.play();
 				}
-				
+
 			}
 		});
 
@@ -76,7 +80,12 @@ public class MediaPlayerActions {
 		bottompanel.fullScreen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				mediaPlayer.toggleFullScreen();
+				if (mediaPlayer.isFullScreen()) {
+					mediaPlayer.toggleFullScreen();
+					MediaPlayer.window.setBounds(500, 100, 850, 550);
+				} else {
+					mediaPlayer.toggleFullScreen();
+				}
 			}
 		});
 
@@ -89,9 +98,41 @@ public class MediaPlayerActions {
 			}
 		});
 
-		// open file button - lets the user open a avi file to play in the media
-		// player
-		// we have limited the files they can pick mp4 only
+		// add commentary button - lets the user add an already created
+		// commentary, or any mp3 and merge with the current playing video
+		// creates an audio object (swing worker) and executes the swing worker
+		bottompanel.openAudioEditor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (mediaPlayer.isPlaying()) {
+					mediaPlayer.pause();
+				}
+				if (bottompanel.openAudioEditor.getText().equals("Open Audio Editor")) {
+					editAudio = new AudioEditor();
+					bottompanel.openAudioEditor.setText("Close Audio Editor");
+				} else {
+					editAudio.audioEditor.setVisible(false);
+					bottompanel.openAudioEditor.setText("Open Audio Editor");
+				}
+			}
+		});
+
+		bottompanel.progressBar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				int mousePosition = e.getX();
+				int progressValue = (int) Math
+						.round(((double) mousePosition / (double) bottompanel.progressBar.getWidth())
+								* bottompanel.progressBar.getMaximum());
+				long videoLength = Long.valueOf(progressValue);
+				mediaPlayer.setTime(videoLength * 1000);
+				bottompanel.progressBar.setValue(progressValue);
+			}
+		});
+
+	}
+
+	public void topPanelListeners() {
+
 		guicomponents.MediaPlayer.open.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				UIManager.put("FileChooser.readOnly", Boolean.TRUE);
@@ -116,65 +157,27 @@ public class MediaPlayerActions {
 			}
 		});
 
-		// add commentary button - lets the user add an already created
-		// commentary, or any mp3 and merge with the current playing video
-		// creates an audio object (swing worker) and executes the swing worker
-		bottompanel.openAudioEditor.addActionListener(new ActionListener() {
+		guicomponents.MediaPlayer.save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (mediaPlayer.isPlaying()) {
-					mediaPlayer.pause();
-				}
-				if (bottompanel.openAudioEditor.getText().equals("Open Audio Editor")) {
-					editAudio = new AudioEditor();
-					bottompanel.openAudioEditor.setText("Close Audio Editor");
-				} else {
-					editAudio.audioEditor.setVisible(false);
-					bottompanel.openAudioEditor.setText("Open Audio Editor");
-				}
-				
-				/*AudioVideoMerger addAudio;
-				getAudioandVideoDirectory();
 				String saveFileAs = JOptionPane.showInputDialog("What would you like to call your new video file? ");
-				addAudio = new AudioVideoMerger(audioDirectory, saveFileAs, videoToMerge, mediaPlayer, panel);
-				addAudio.execute();*/
+				if (AudioEditor.keepYes.isSelected() || AudioEditor.keepNo.isSelected()) {
+					UIManager.put("FileChooser.readOnly", Boolean.TRUE);
+					JFileChooser saveNewVideo = new JFileChooser();
+					saveNewVideo.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+					saveNewVideo.setAcceptAllFileFilterUsed(false);
+					if (saveNewVideo.showSaveDialog(panel) == JFileChooser.APPROVE_OPTION) {
+						String saveDirectory = saveNewVideo.getSelectedFile().getAbsolutePath();
+						AudioVideoMerger addAudio = new AudioVideoMerger(AudioEditorActions.audioFiles, saveFileAs, 
+								AudioEditorActions.fullVideoDirectory, saveDirectory, mediaPlayer, panel);
+								addAudio.execute();
+					}
+				} else {
+					JOptionPane.showMessageDialog(panel, "Please select whether you want to keep\nthe original audio of the video first.");
+				}
+						
 			}
 		});
 
-		bottompanel.progressBar.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				int mousePosition = e.getX();
-				int progressValue = (int) Math
-						.round(((double) mousePosition / (double) bottompanel.progressBar.getWidth())
-								* bottompanel.progressBar.getMaximum());
-				long videoLength = Long.valueOf(progressValue);
-				mediaPlayer.setTime(videoLength * 1000);
-				bottompanel.progressBar.setValue(progressValue);
-			}
-		});
-
-	}
-
-	public void getAudioandVideoDirectory() {
-		UIManager.put("FileChooser.readOnly", Boolean.TRUE);
-		JFileChooser audio = new JFileChooser();
-		audio.setDialogTitle("Please choose an mp3 file to merge");
-		audio.setFileFilter(new FileNameExtensionFilter(".mp3", "mp3"));
-		audio.showOpenDialog(panel);
-		if (audio.getSelectedFile() != null) {
-			audioDirectory = audio.getSelectedFile().getAbsolutePath();
-
-		}
-
-		UIManager.put("FileChooser.readOnly", Boolean.TRUE);
-		JFileChooser video = new JFileChooser();
-		video.setDialogTitle("Please choose a video (mp4) file to merge");
-		video.setFileFilter(new FileNameExtensionFilter(".mp4", "mp4"));
-		video.showOpenDialog(panel);
-		if (video.getSelectedFile() != null) {
-			videoToMerge = video.getSelectedFile().getAbsolutePath();
-
-		}
 	}
 
 }

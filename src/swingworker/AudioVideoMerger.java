@@ -1,16 +1,16 @@
 package swingworker;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
-import javax.swing.UIManager;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
-import guicomponents.MediaPlayer;
+import actionlisteners.AudioEditorActions;
+import guicomponents.AudioEditor;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
+import vidivox.AudioFile;
 
 /*
  * This class extends SwingWorker because it deals with the merging of the audio and video 
@@ -19,54 +19,95 @@ import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
  */
 public class AudioVideoMerger extends SwingWorker<Void, String> {
 
-	String audioDirectory;
+	ArrayList<AudioFile> audioFiles;
 	String videoDirectory;
 	String saveFileAs;
 	EmbeddedMediaPlayer mediaPlayer;
 	JPanel panel;
 	String saveDirectory;
 
-	public AudioVideoMerger(String audioDirectory, String saveFileAs, String videoDirectory, EmbeddedMediaPlayer mediaPlayer, JPanel panel) {
-		this.audioDirectory = audioDirectory;
+	public AudioVideoMerger(ArrayList<AudioFile> audioFiles, String saveFileAs, String videoDirectory,
+			String saveDirectory, EmbeddedMediaPlayer mediaPlayer, JPanel panel) {
+		this.audioFiles = audioFiles;
 		this.videoDirectory = videoDirectory;
 		this.saveFileAs = saveFileAs;
+		this.saveDirectory = saveDirectory;
 		this.mediaPlayer = mediaPlayer;
 		this.panel = panel;
 
-	} 
+	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see javax.swing.SwingWorker#doInBackground()
-	 * The doInBackground method deals with the heavy work, which is the merging of the two files 
-	 * (or the replacing of the video's sound with the audio files sound).
-	 * Once this is done, it will then play the new video.
+	 * 
+	 * @see javax.swing.SwingWorker#doInBackground() The doInBackground method
+	 * deals with the heavy work, which is the merging of the two files (or the
+	 * replacing of the video's sound with the audio files sound). Once this is
+	 * done, it will then play the new video.
 	 */
 	@Override
 	protected Void doInBackground() throws Exception {
-
-		JFileChooser saveNewVideo = new JFileChooser();
-		saveNewVideo.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		saveNewVideo.setAcceptAllFileFilterUsed(false);
-		
-		if (saveNewVideo.showSaveDialog(panel) == JFileChooser.APPROVE_OPTION) {
-			saveDirectory = saveNewVideo.getSelectedFile().getAbsolutePath();
-			try {
-				
-				String merge = "ffmpeg -i " + videoDirectory + " -i " + audioDirectory + " -c:v copy "
-						+ "-c:a copy -map 0:v:0 -map 1:a:0 " + saveDirectory + "/" + saveFileAs + ".mp4";
-				ProcessBuilder pb = new ProcessBuilder("/bin/bash", "-c", merge);
-				Process proc = pb.start();
-				proc.waitFor();
-
-			} catch (IOException | InterruptedException e) {
-				e.printStackTrace();
-			}
+		String outputVideo = saveDirectory + "/" + saveFileAs + ".mp4";
+		System.out.println(outputVideo);
+		try {
 			
-		} else {
-			JOptionPane.showMessageDialog(panel, "Must select a directory to save to");
-		}	
+			if (AudioEditor.keepYes.isSelected()) {
+				for (int i = 0; i < 1; i++) {
+					int seconds = Integer.parseInt(audioFiles.get(i).getStartSecs());
+					int mins = Integer.parseInt(audioFiles.get(i).getStartMins());
+					int milliseconds = seconds*1000 + mins*10000;
+					if (!(milliseconds > 0)) {
+						milliseconds = 15;
+					}
+					String merge = "ffmpeg -y -i " + videoDirectory + " -i " + audioFiles.get(i).getAbsPath() + 
+							" -filter_complex \"[1:a]adelay=" + milliseconds + "[aud1];[aud1][0:a] amix=inputs=2\" "
+							+ outputVideo;
+					ProcessBuilder pb = new ProcessBuilder("/bin/bash", "-c", merge);
+					Process proc = pb.start();
+					proc.waitFor();
+				}
+				for (int i = 1; i < audioFiles.size(); i++) {
+					int seconds = Integer.parseInt(audioFiles.get(i).getStartSecs());
+					int mins = Integer.parseInt(audioFiles.get(i).getStartMins());
+					int milliseconds = seconds*1000 + mins*10000;
+					if (!(milliseconds > 0)) {
+						milliseconds = 15;
+					}
+					String merge = "ffmpeg -y -i " + outputVideo + " -i " + audioFiles.get(i).getAbsPath() + 
+							" -filter_complex \"[1:a]adelay=" + milliseconds + "[aud1];[aud1][0:a] amix=inputs=2\" "
+							+ outputVideo;
+					ProcessBuilder pb = new ProcessBuilder("/bin/bash", "-c", merge);
+					Process proc = pb.start();
+					proc.waitFor();
+				}
+			} else {
+				String strip = "ffmpeg -i " + videoDirectory + " -vcodec copy -an " + outputVideo;
+				ProcessBuilder p = new ProcessBuilder("/bin/bash", "-c", strip);
+				Process process = p.start();
+				process.waitFor();
+				for (int i = 0; i < audioFiles.size(); i++) {
+					int seconds = Integer.parseInt(audioFiles.get(i).getStartSecs());
+					int mins = Integer.parseInt(audioFiles.get(i).getStartMins());
+					int milliseconds = seconds*1000 + mins*10000;
+					if (!(milliseconds > 0)) {
+						milliseconds = 15;
+					}
+					String merge = "ffmpeg -y -i " + outputVideo + " -i " + audioFiles.get(i).getAbsPath() + 
+							" -filter_complex \"[1:a]adelay=" + milliseconds + "[aud1];[aud1][0:a] amix=inputs=2\" "
+							+ outputVideo;
+					ProcessBuilder pb = new ProcessBuilder("/bin/bash", "-c", merge);
+					Process proc = pb.start();
+					proc.waitFor();
+				}
+				
+			}
+
+		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		return null;
+
 	}
 
 	public void done() {
