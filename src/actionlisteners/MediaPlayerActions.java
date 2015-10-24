@@ -4,27 +4,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import guicomponents.AddCommentary;
 import guicomponents.AudioEditor;
 import guicomponents.BottomPanel;
-import swingworker.AudioVideoMerger;
-import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
-import vidivox.AddCommentary;
 
-public class ActionListeners {
+public class MediaPlayerActions {
 
 	private AddCommentary window;
 	BottomPanel bottompanel;
@@ -34,9 +28,9 @@ public class ActionListeners {
 	String audioDirectory;
 	public boolean mousePressedPlaying = false;
 	EmbeddedMediaPlayer mediaPlayer;
-	AudioEditor audioEditor;
+	AudioEditor editAudio;
 
-	public ActionListeners(BottomPanel btmpanel, JPanel panel, EmbeddedMediaPlayer mediaPlayer) {
+	public MediaPlayerActions(BottomPanel btmpanel, JPanel panel, EmbeddedMediaPlayer mediaPlayer) {
 		this.bottompanel = btmpanel;
 		this.panel = panel;
 		this.mediaPlayer = mediaPlayer;
@@ -125,16 +119,24 @@ public class ActionListeners {
 		// add commentary button - lets the user add an already created
 		// commentary, or any mp3 and merge with the current playing video
 		// creates an audio object (swing worker) and executes the swing worker
-		bottompanel.addCommentary.addActionListener(new ActionListener() {
+		bottompanel.openAudioEditor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (mediaPlayer.isPlaying()) {
 					mediaPlayer.pause();
 				}
-				AudioVideoMerger addAudio;
+				if (bottompanel.openAudioEditor.getText().equals("Open Audio Editor")) {
+					editAudio = new AudioEditor();
+					bottompanel.openAudioEditor.setText("Close Audio Editor");
+				} else {
+					editAudio.audioEditor.setVisible(false);
+					bottompanel.openAudioEditor.setText("Open Audio Editor");
+				}
+				
+				/*AudioVideoMerger addAudio;
 				getAudioandVideoDirectory();
 				String saveFileAs = JOptionPane.showInputDialog("What would you like to call your new video file? ");
 				addAudio = new AudioVideoMerger(audioDirectory, saveFileAs, videoToMerge, mediaPlayer, panel);
-				addAudio.execute();
+				addAudio.execute();*/
 			}
 		});
 
@@ -148,15 +150,6 @@ public class ActionListeners {
 				long videoLength = Long.valueOf(progressValue);
 				mediaPlayer.setTime(videoLength * 1000);
 				bottompanel.progressBar.setValue(progressValue);
-			}
-		});
-		
-		guicomponents.MediaPlayer.audio.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (guicomponents.MediaPlayer.audio.getText().equals("Open Audio Editor")) {
-					AudioEditor audioEditor = new AudioEditor();
-					guicomponents.MediaPlayer.audio.setText("Close Audio Editor");
-				} 	
 			}
 		});
 

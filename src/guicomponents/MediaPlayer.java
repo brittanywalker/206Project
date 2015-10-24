@@ -3,7 +3,6 @@ package guicomponents;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -12,7 +11,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import actionlisteners.ActionListeners;
+import actionlisteners.MediaPlayerActions;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.embedded.DefaultFullScreenStrategy;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
@@ -21,7 +20,6 @@ import uk.co.caprica.vlcj.player.embedded.videosurface.CanvasVideoSurface;
 
 public class MediaPlayer {
 
-	private static final long serialVersionUID = 1L;
 	private MediaPlayerFactory mediaPlayerFactory;
 	FullScreenStrategy fullScreenStrategy;
 	public EmbeddedMediaPlayer mediaPlayer;
@@ -29,7 +27,7 @@ public class MediaPlayer {
 
 	private JPanel panel;
 	private Canvas canvas;
-	ActionListeners action;
+	MediaPlayerActions action;
 	BottomPanel btmpanel;
 	AudioEditor audioEditor;
 	public JMenuBar menu;
@@ -37,7 +35,6 @@ public class MediaPlayer {
 	public static JMenu festival;
 	public static JMenuItem txtSpeech;
 	public static JMenuItem open;
-	public static JMenuItem audio;
 
 	public static String videoDirectory;
 
@@ -56,7 +53,7 @@ public class MediaPlayer {
 		
 		initialisePlayer();
 		createPanel();
-		action = new ActionListeners(btmpanel, panel, mediaPlayer);
+		action = new MediaPlayerActions(btmpanel, panel, mediaPlayer);
 		
 		window.add(panel);
 		window.setVisible(true);
@@ -89,14 +86,12 @@ public class MediaPlayer {
 		menu = new JMenuBar();
 		file = new JMenu("File");
 		open = new JMenuItem("Open");
-		audio = new JMenuItem("Open Audio Editor");
 		festival = new JMenu("Create");
 		txtSpeech = new JMenuItem("Text to Speech");
 		menu.add(file);
 		menu.add(festival);
 		festival.add(txtSpeech);
 		file.add(open);
-		file.add(audio);
 		panel.add(menu, BorderLayout.NORTH);
 	}
 	

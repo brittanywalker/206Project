@@ -16,7 +16,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JSlider;
 import javax.swing.Timer;
 
-import actionlisteners.ActionListeners;
+import actionlisteners.MediaPlayerActions;
 import uk.co.caprica.vlcj.binding.LibVlcConst;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
@@ -36,7 +36,7 @@ public class BottomPanel {
 	public JButton play;
 	public JButton fullScreen;
 	public JSlider volume;
-	public JButton addCommentary;
+	public JButton openAudioEditor;
 	public JProgressBar progressBar;
 	public JLabel currentTime;
 	public JLabel endTime;
@@ -95,9 +95,7 @@ public class BottomPanel {
 		ImageIcon fullScreenImage = new ImageIcon("buttons/fullscreen.png");
 		fullScreen = new JButton(fullScreenImage);
 		volume = new JSlider();
-
-		ImageIcon addImage = new ImageIcon("buttons/Add.png");
-		addCommentary = new JButton(addImage);
+		openAudioEditor = new JButton("Open Audio Editor");
 
 	}
 
@@ -125,8 +123,10 @@ public class BottomPanel {
 		volume.setForeground(Color.WHITE);
 		volume.setToolTipText("Change Volume");
 		
-		addCommentary.setToolTipText("Add a commentary to your video");
-		addCommentary.setPreferredSize(new Dimension(50, 50));
+		openAudioEditor.setToolTipText("Use this to add mp3 files to a video of your choice");
+		openAudioEditor.setPreferredSize(new Dimension(50, 50));
+		openAudioEditor.setBackground(Color.darkGray);
+		openAudioEditor.setForeground(Color.WHITE);
 
 	}
 
@@ -150,7 +150,7 @@ public class BottomPanel {
 		buttonPanel.add(mute);
 		buttonPanel.add(volume);
 		
-		buttonPanel.add(addCommentary);
+		buttonPanel.add(openAudioEditor);
 	}
 
 	public void positionPanelLayout() {
@@ -161,7 +161,7 @@ public class BottomPanel {
 
 	public void beginProgress() {
 
-		if (ActionListeners.currentVideoDirectory == null) {
+		if (MediaPlayerActions.currentVideoDirectory == null) {
 			progressBar.setValue(0);
 		} else {
 			long videoLength = mediaPlayer.getLength();
