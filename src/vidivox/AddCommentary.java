@@ -28,7 +28,7 @@ public class AddCommentary {
 	PreviewFestival pr = null;
 	JLabel lblAddCommentary;
 	JTextArea textArea;
-	static ImageIcon speakImage;
+	public static ImageIcon speakImage;
 	ImageIcon saveImage;
 	ImageIcon stopImage;
 	public static JButton btnSpeak;
@@ -150,15 +150,15 @@ public class AddCommentary {
 				String save = "ffmpeg -i " + saveDirectory + "/output.wav " + saveDirectory + "/" + name + ".mp3";				
 				ProcessBuilder wav2mp3 = new ProcessBuilder("/bin/bash", "-c", save);
 				
-				String remove = "rm " + saveDirectory + "/output.wav";
-				ProcessBuilder removetemp = new ProcessBuilder("/bin/bash", "-c", remove);
+				//String remove = "rm " + saveDirectory + "/output.wav";
+				//ProcessBuilder removetemp = new ProcessBuilder("/bin/bash", "-c", remove);
 				
 				try {
 					Process p = text2wave.start();
 					p.waitFor();
 					Process p1 = wav2mp3.start();
 					p1.waitFor();
-					removetemp.start();
+					///removetemp.start();
 				} catch (IOException | InterruptedException e2) {
 					e2.printStackTrace();
 				}

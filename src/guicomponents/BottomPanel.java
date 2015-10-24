@@ -1,30 +1,24 @@
 package guicomponents;
 
-import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JSlider;
-import javax.swing.Painter;
 import javax.swing.Timer;
-import javax.swing.UIDefaults;
 
+import actionlisteners.ActionListeners;
 import uk.co.caprica.vlcj.binding.LibVlcConst;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
-import vidivox.ActionListeners;
 
 public class BottomPanel {
 
@@ -42,8 +36,6 @@ public class BottomPanel {
 	public JButton play;
 	public JButton fullScreen;
 	public JSlider volume;
-	public JButton openFile;
-	public JButton createCommentary;
 	public JButton addCommentary;
 	public JProgressBar progressBar;
 	public JLabel currentTime;
@@ -104,10 +96,6 @@ public class BottomPanel {
 		fullScreen = new JButton(fullScreenImage);
 		volume = new JSlider();
 
-		ImageIcon openImage = new ImageIcon("buttons/Open.png");
-		openFile = new JButton(openImage);
-		ImageIcon createImage = new ImageIcon("buttons/Create.png");
-		createCommentary = new JButton(createImage);
 		ImageIcon addImage = new ImageIcon("buttons/Add.png");
 		addCommentary = new JButton(addImage);
 
@@ -136,11 +124,7 @@ public class BottomPanel {
 		volume.setBackground(Color.darkGray);
 		volume.setForeground(Color.WHITE);
 		volume.setToolTipText("Change Volume");
-
-		openFile.setToolTipText("Choose a video to play :D");
-		openFile.setPreferredSize(new Dimension(50, 50));
-		createCommentary.setToolTipText("Create a spoken commentary");
-		createCommentary.setPreferredSize(new Dimension(50, 50));
+		
 		addCommentary.setToolTipText("Add a commentary to your video");
 		addCommentary.setPreferredSize(new Dimension(50, 50));
 
@@ -165,8 +149,7 @@ public class BottomPanel {
 		buttonPanel.add(fullScreen);
 		buttonPanel.add(mute);
 		buttonPanel.add(volume);
-		buttonPanel.add(openFile);
-		buttonPanel.add(createCommentary);
+		
 		buttonPanel.add(addCommentary);
 	}
 

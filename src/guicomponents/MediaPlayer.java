@@ -12,12 +12,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import actionlisteners.ActionListeners;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.embedded.DefaultFullScreenStrategy;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import uk.co.caprica.vlcj.player.embedded.FullScreenStrategy;
 import uk.co.caprica.vlcj.player.embedded.videosurface.CanvasVideoSurface;
-import vidivox.ActionListeners;
 
 public class MediaPlayer {
 
@@ -31,10 +31,13 @@ public class MediaPlayer {
 	private Canvas canvas;
 	ActionListeners action;
 	BottomPanel btmpanel;
+	AudioEditor audioEditor;
+	public JMenuBar menu;
 	public static JMenu file;
 	public static JMenu festival;
 	public static JMenuItem txtSpeech;
 	public static JMenuItem open;
+	public static JMenuItem audio;
 
 	public static String videoDirectory;
 
@@ -48,7 +51,7 @@ public class MediaPlayer {
 		window = new JFrame();
 		window.setTitle("Vidivox");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setBounds(500, 200, 853, 637);
+		window.setBounds(500, 100, 850, 550);
 		window.setBackground(Color.darkGray);
 		
 		initialisePlayer();
@@ -62,9 +65,7 @@ public class MediaPlayer {
 	public void initialisePlayer() {
 		
 		canvas = new Canvas();
-		//canvas.setBounds(0, 0, 853, 600);
 		canvas.setBackground(Color.darkGray);
-
 		mediaPlayerFactory = new MediaPlayerFactory();
 		fullScreenStrategy = new DefaultFullScreenStrategy(window);
 		mediaPlayer = mediaPlayerFactory.newEmbeddedMediaPlayer(fullScreenStrategy);
@@ -85,15 +86,17 @@ public class MediaPlayer {
 	}
 	
 	public void addTopPanel() {
-		JMenuBar menu = new JMenuBar();
+		menu = new JMenuBar();
 		file = new JMenu("File");
 		open = new JMenuItem("Open");
+		audio = new JMenuItem("Open Audio Editor");
 		festival = new JMenu("Create");
 		txtSpeech = new JMenuItem("Text to Speech");
 		menu.add(file);
 		menu.add(festival);
 		festival.add(txtSpeech);
 		file.add(open);
+		file.add(audio);
 		panel.add(menu, BorderLayout.NORTH);
 	}
 	

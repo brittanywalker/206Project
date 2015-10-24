@@ -53,10 +53,8 @@ public class AudioVideoMerger extends SwingWorker<Void, String> {
 			saveDirectory = saveNewVideo.getSelectedFile().getAbsolutePath();
 			try {
 				
-				String merge = "ffmpeg -i " + videoDirectory + " -i " + audioDirectory + " -c:v copy -c:a aac -strict experimental -map 0:v:0 -map 1:a:0 " + saveDirectory + "/" + saveFileAs + ".mp4";
-				//String merge = "ffmpeg -i " + videoDirectory + " -i " + audioDirectory + " -c:v copy -c:a copy " + saveDirectory + "/" + saveFileAs + ".mp4";
-				//String merge = "ffmpeg -i " + videoDirectory + " -i " + audioDirectory +" -filter_complex amix=inputs=2 " + saveDirectory + "/" + saveFileAs + ".mp4";
-				System.out.println(merge);
+				String merge = "ffmpeg -i " + videoDirectory + " -i " + audioDirectory + " -c:v copy "
+						+ "-c:a copy -map 0:v:0 -map 1:a:0 " + saveDirectory + "/" + saveFileAs + ".mp4";
 				ProcessBuilder pb = new ProcessBuilder("/bin/bash", "-c", merge);
 				Process proc = pb.start();
 				proc.waitFor();
