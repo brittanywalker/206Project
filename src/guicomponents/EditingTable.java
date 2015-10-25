@@ -54,14 +54,14 @@ public class EditingTable {
 		bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
 		
 		deleteEntry = new JButton("Delete Entry");
-		deleteEntry.setFont(new Font("Dialog", Font.PLAIN, 11));
+		deleteEntry.setFont(new Font("Dialog", Font.BOLD, 12));
 		deleteEntry.setAlignmentX(Component.CENTER_ALIGNMENT);
 		deleteEntry.setBackground(Color.darkGray);
 		deleteEntry.setForeground(Color.WHITE);
 		deleteEntry.setBorderPainted(false);
 		
-		saveNewVideo = new JButton("Merge Audio with Video");
-		saveNewVideo.setFont(new Font("Dialog", Font.PLAIN, 11));
+		saveNewVideo = new JButton("Save Video with New Audio");
+		saveNewVideo.setFont(new Font("Dialog", Font.BOLD, 12));
 		saveNewVideo.setAlignmentX(Component.CENTER_ALIGNMENT);
 		saveNewVideo.setBackground(Color.darkGray);
 		saveNewVideo.setForeground(Color.WHITE);

@@ -51,13 +51,12 @@ public class MediaPlayerActions {
 		bottompanel.mute.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (mediaPlayer.isMute()) {
-					bottompanel.mute.setIcon(bottompanel.muteImage);
-					mediaPlayer.mute();
-				} else {
+				if (bottompanel.mute.getIcon().equals(bottompanel.muteImage)) {
 					bottompanel.mute.setIcon(bottompanel.unmuteImage);
-					mediaPlayer.mute();
+				} else {
+					bottompanel.mute.setIcon(bottompanel.muteImage);
 				}
+				mediaPlayer.mute();
 			}
 		});
 
@@ -112,9 +111,14 @@ public class MediaPlayerActions {
 					editAudio = new AudioEditor();
 					bottompanel.openAudioEditor.setText("Close Audio Editor");
 				} else {
-					editAudio.audioEditor.setVisible(false);
-					EditingTable.editingPanel.setVisible(false);
-					bottompanel.openAudioEditor.setText("Open Audio Editor");
+					int option = JOptionPane.showConfirmDialog(panel, "Please make sure you have saved your\nvideo "
+							+ "otherwise your work will be lost.\n Do you want to continue?", "Are you sure you want to continue?",
+							JOptionPane.YES_NO_OPTION);
+					if (option == JOptionPane.YES_OPTION) {
+						editAudio.audioEditor.setVisible(false);
+						EditingTable.editingPanel.setVisible(false);
+						bottompanel.openAudioEditor.setText("Open Audio Editor");
+					}	
 				}
 			}
 		});
@@ -140,6 +144,7 @@ public class MediaPlayerActions {
 			public void actionPerformed(ActionEvent arg0) {
 				UIManager.put("FileChooser.readOnly", Boolean.TRUE);
 				JFileChooser fc = new JFileChooser();
+				fc.setAcceptAllFileFilterUsed(false);
 				fc.setFileFilter(new FileNameExtensionFilter(".mp4", "mp4"));
 				fc.showOpenDialog(panel);
 				if (fc.getSelectedFile() != null) {

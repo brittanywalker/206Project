@@ -13,6 +13,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import actionlisteners.AudioEditorActions;
+import vidivox.JTextFieldLimit;
 
 public class AudioEditor {
 	
@@ -72,7 +73,7 @@ public class AudioEditor {
 		videoField = new JTextField();
 		videoField.setEditable(false);
 		videoField.setColumns(30);
-		openButton = new JButton("Open");
+		openButton = new JButton("Browse...");
 		openButton.setForeground(Color.darkGray);
 	}
 	
@@ -98,7 +99,7 @@ public class AudioEditor {
 		audioField = new JTextField();
 		audioField.setEditable(false);
 		audioField.setColumns(30);
-		mp3Button = new JButton("Open");
+		mp3Button = new JButton("Browse...");
 		mp3Button.setForeground(Color.darkGray);
 	}
 	
@@ -109,8 +110,10 @@ public class AudioEditor {
 		startTime.setForeground(Color.WHITE);
 		startMins = new JTextField();
 		startMins.setColumns(2);
+		startMins.setDocument(new JTextFieldLimit(2));
 		startSecs = new JTextField();
 		startSecs.setColumns(2);
+		startSecs.setDocument(new JTextFieldLimit(2));
 		addtoVideo = new JButton("Add to Video");
 		mins = new JLabel("mins");
 		mins.setForeground(Color.WHITE);

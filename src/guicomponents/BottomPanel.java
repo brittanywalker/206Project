@@ -81,8 +81,8 @@ public class BottomPanel {
 
 	public void buttonPanelComponents() {
 
-		muteImage = new ImageIcon("buttons/unmute.png");
-		unmuteImage = new ImageIcon("buttons/mute.png");
+		muteImage = new ImageIcon("buttons/mute.png");
+		unmuteImage = new ImageIcon("buttons/unmute.png");
 		mute = new JButton(muteImage);
 		pauseImage = new ImageIcon("buttons/pause.png");
 		playImage = new ImageIcon("buttons/play.png");
@@ -155,7 +155,6 @@ public class BottomPanel {
 		buttonPanel.add(fullScreen);
 		buttonPanel.add(mute);
 		buttonPanel.add(volume);
-		
 		buttonPanel.add(openAudioEditor);
 	}
 

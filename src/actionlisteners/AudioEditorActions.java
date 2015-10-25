@@ -28,6 +28,7 @@ public class AudioEditorActions {
 	String startMins;
 	String startSecs;
 	EditingTable editor;
+	String fileName;
 
 	public AudioEditorActions(JFrame frame) {
 		this.frame = frame;
@@ -43,11 +44,12 @@ public class AudioEditorActions {
 			public void actionPerformed(ActionEvent e) {
 				UIManager.put("FileChooser.readOnly", Boolean.TRUE);
 				videoChooser = new JFileChooser("Choose a video(.mp4)");
+				videoChooser.setAcceptAllFileFilterUsed(false);
 				videoChooser.setFileFilter(new FileNameExtensionFilter(".mp4", "mp4"));
 				videoChooser.showOpenDialog(frame);
 				if (videoChooser.getSelectedFile() != null) {
 					fullVideoDirectory = videoChooser.getSelectedFile().getAbsolutePath();
-					AudioEditor.videoField.setText(videoChooser.getSelectedFile().getPath());
+					AudioEditor.videoField.setText(videoChooser.getSelectedFile().getName());
 				}
 			}
 		});
@@ -56,11 +58,13 @@ public class AudioEditorActions {
 			public void actionPerformed(ActionEvent e) {
 				UIManager.put("FileChooser.readOnly", Boolean.TRUE);
 				audioChooser = new JFileChooser("Choose an audio file (.mp3)");
+				audioChooser.setAcceptAllFileFilterUsed(false);
 				audioChooser.setFileFilter(new FileNameExtensionFilter(".mp3", "mp3"));
 				audioChooser.showOpenDialog(frame);
 				if (audioChooser.getSelectedFile() != null) {
 					fullAudioDirectory = audioChooser.getSelectedFile().getAbsolutePath();
-					AudioEditor.audioField.setText(audioChooser.getSelectedFile().getPath());
+					AudioEditor.audioField.setText(audioChooser.getSelectedFile().getName());
+					fileName = audioChooser.getSelectedFile().getName();
 				}
 			}
 		});
@@ -81,19 +85,19 @@ public class AudioEditorActions {
 					if (startSecs == null || startSecs.equals("")) {
 						startSecs = "0";
 					}
-					audioFile = new AudioFile(fullAudioDirectory, startMins, startSecs);
+					audioFile = new AudioFile(fullAudioDirectory, fileName, startMins, startSecs);
 					AudioFileTableModel.files.add(audioFile);
 					AudioEditor.startMins.setText("");
 					AudioEditor.startSecs.setText("");
 					AudioEditor.audioField.setText("");
-					editor.model.fireTableDataChanged();
+					EditingTable.model.fireTableDataChanged();
 					
 
 				} else if ((AudioEditor.startMins.getText().equals("") || AudioEditor.startMins.getText() == null)
 						&& (AudioEditor.startSecs.getText().equals("") || AudioEditor.startSecs.getText() == null)) {
-					JOptionPane.showMessageDialog(frame, "You must enter a time to start\n the audio file at");
+					JOptionPane.showMessageDialog(frame, "You must input a time that you\nwant to start your mp3 at.");
 				} else {
-					JOptionPane.showMessageDialog(frame, "Please first select an mp3 file to add");
+					JOptionPane.showMessageDialog(frame, "Please first select an mp3 file to add.");
 				}
 
 			}

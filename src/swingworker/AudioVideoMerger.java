@@ -1,16 +1,20 @@
 package swingworker;
 
+import java.awt.BorderLayout;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.SwingWorker;
 
 import actionlisteners.AudioEditorActions;
 import guicomponents.AudioEditor;
 import guicomponents.BottomPanel;
+import guicomponents.LoadingBar;
 import guicomponents.MediaPlayer;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import vidivox.AudioFile;
@@ -29,6 +33,7 @@ public class AudioVideoMerger extends SwingWorker<Void, String> {
 	JFrame frame;
 	String saveDirectory;
 	String outputVideo;
+	JFrame loading;
 
 	public AudioVideoMerger(ArrayList<AudioFile> audioFiles, String saveFileAs, String videoDirectory,
 			String saveDirectory, EmbeddedMediaPlayer mediaPlayer, JFrame frame) {
@@ -51,6 +56,9 @@ public class AudioVideoMerger extends SwingWorker<Void, String> {
 	 */
 	@Override
 	protected Void doInBackground() throws Exception {
+		loading = new LoadingBar();
+		loading.setVisible(true);
+		
 		outputVideo = saveDirectory + "/" + saveFileAs;
 		try {
 			
@@ -122,6 +130,10 @@ public class AudioVideoMerger extends SwingWorker<Void, String> {
 				}
 				
 			}
+			String rename = "mv " + outputVideo + (audioFiles.size()-1) + ".mp4 " + outputVideo + ".mp4";
+			ProcessBuilder change = new ProcessBuilder("/bin/bash", "-c", rename);
+			Process p = change.start();
+			p.waitFor();
 
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
@@ -132,9 +144,12 @@ public class AudioVideoMerger extends SwingWorker<Void, String> {
 	}
 
 	public void done() {
-		JOptionPane.showMessageDialog(null, "Your new video has been created");
-		MediaPlayer.btmpanel.timer();
-		mediaPlayer.playMedia(outputVideo + (audioFiles.size()-1) + ".mp4");
+		loading.setVisible(false);
+		int option = JOptionPane.showConfirmDialog(null, "Your new video has been created.\nWould you like to play it now?", 
+				"Saved", JOptionPane.YES_NO_OPTION);
+		if (option == JOptionPane.YES_OPTION) {
+			MediaPlayer.btmpanel.timer();
+			mediaPlayer.playMedia(outputVideo + ".mp4");
+		}	
 	}
-
 }

@@ -5,9 +5,11 @@ public class AudioFile {
 	String absPath;
 	String startMins;
 	String startSecs;
-	
-	public AudioFile(String absPath, String startMins, String startSecs) {
+	String fileName;
+
+	public AudioFile(String absPath, String fileName, String startMins, String startSecs) {
 		this.absPath = absPath;
+		this.fileName = fileName;
 		this.startMins = startMins;
 		this.startSecs = startSecs;
 	}
@@ -34,6 +36,14 @@ public class AudioFile {
 
 	public void setStartSecs(String startSecs) {
 		this.startSecs = startSecs;
+	}
+	
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 
 }

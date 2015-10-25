@@ -88,7 +88,7 @@ public class MediaPlayer {
 		
 		open = new JButton("Open Video");
 		open.setOpaque(true);
-		txtSpeech = new JButton("Text to Speech");
+		txtSpeech = new JButton("Text to MP3");
 		txtSpeech.setOpaque(true);
 		menu.add(open);
 		menu.add(txtSpeech);

@@ -52,7 +52,7 @@ public class AudioFileTableModel extends AbstractTableModel{
         Object value = null;
         switch (columnIndex) {
             case 0:
-                value = file.getAbsPath();
+                value = file.getFileName();
                 break;
             case 1:
                 value = file.getStartMins();
