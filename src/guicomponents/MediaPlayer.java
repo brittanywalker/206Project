@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
 
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -22,20 +24,17 @@ public class MediaPlayer {
 
 	private MediaPlayerFactory mediaPlayerFactory;
 	FullScreenStrategy fullScreenStrategy;
-	public EmbeddedMediaPlayer mediaPlayer;
+	public static EmbeddedMediaPlayer mediaPlayer;
 	public static JFrame window;
 
 	private JPanel panel;
 	private Canvas canvas;
 	MediaPlayerActions action;
-	BottomPanel btmpanel;
+	public static BottomPanel btmpanel;
 	AudioEditor audioEditor;
-	public JMenuBar menu;
-	public static JMenu file;
-	public static JMenu festival;
-	public static JMenuItem txtSpeech;
-	public static JMenuItem open;
-	public static JMenuItem save;
+	public JPanel menu;
+	public static JButton txtSpeech;
+	public static JButton open;
 
 	public static String videoDirectory;
 
@@ -84,17 +83,16 @@ public class MediaPlayer {
 	}
 	
 	public void addTopPanel() {
-		menu = new JMenuBar();
-		file = new JMenu("File");
-		open = new JMenuItem("Open");
-		save = new JMenuItem("Save Customised Video");
-		festival = new JMenu("Create");
-		txtSpeech = new JMenuItem("Text to Speech");
-		menu.add(file);
-		menu.add(festival);
-		festival.add(txtSpeech);
-		file.add(open);
-		file.add(save);
+		menu = new JPanel();
+		menu.setLayout(new BoxLayout(menu, BoxLayout.X_AXIS));
+		
+		open = new JButton("Open Video");
+		open.setOpaque(true);
+		txtSpeech = new JButton("Text to Speech");
+		txtSpeech.setOpaque(true);
+		menu.add(open);
+		menu.add(txtSpeech);
+		
 		panel.add(menu, BorderLayout.NORTH);
 	}
 	

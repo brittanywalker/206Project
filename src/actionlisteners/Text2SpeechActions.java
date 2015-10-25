@@ -16,12 +16,12 @@ import swingworker.PreviewFestival;
 public class Text2SpeechActions {
 	
 	String saveDirectory;
-	JPanel contentPane;
+	JFrame contentPane;
 	Text2SpeechActions actions;
 	PreviewFestival pr = null;
 	
-	public Text2SpeechActions(JPanel contentPane) {
-		this.contentPane = contentPane;
+	public Text2SpeechActions(JFrame commentary) {
+		this.contentPane = commentary;
 		createActionListeners();
 	}
 	
@@ -30,12 +30,12 @@ public class Text2SpeechActions {
 		AddCommentary.btnSpeak.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String text = guicomponents.AddCommentary.textArea.getText();
-				if (guicomponents.AddCommentary.btnSpeak.getIcon().equals(guicomponents.AddCommentary.speakImage)) {
-					guicomponents.AddCommentary.btnSpeak.setIcon(guicomponents.AddCommentary.stopImage);
+				if (guicomponents.AddCommentary.btnSpeak.getText().equals("Speak")) {
+					guicomponents.AddCommentary.btnSpeak.setText("Stop");
 					pr = new PreviewFestival(text);			
 					pr.execute();
 				} else {
-					guicomponents.AddCommentary.btnSpeak.setIcon(guicomponents.AddCommentary.speakImage);
+					guicomponents.AddCommentary.btnSpeak.setText("Speak");
 					pr.cancel(true);
 				}
 			}

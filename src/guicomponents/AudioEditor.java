@@ -43,7 +43,7 @@ public class AudioEditor {
 		
 		audioEditor = new JFrame("Audio Editor");
 		audioEditor.getContentPane().setLayout(new BoxLayout(audioEditor.getContentPane(), BoxLayout.Y_AXIS));
-		audioEditor.setBounds(500, 700, 800, 200);
+		audioEditor.setBounds(500, 750, 800, 200);
 		createPanels();
 		audioEditor.add(videoPanel);
 		audioEditor.add(originalSoundPanel);

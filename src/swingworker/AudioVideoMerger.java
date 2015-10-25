@@ -3,12 +3,15 @@ package swingworker;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 
 import actionlisteners.AudioEditorActions;
 import guicomponents.AudioEditor;
+import guicomponents.BottomPanel;
+import guicomponents.MediaPlayer;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import vidivox.AudioFile;
 
@@ -23,17 +26,18 @@ public class AudioVideoMerger extends SwingWorker<Void, String> {
 	String videoDirectory;
 	String saveFileAs;
 	EmbeddedMediaPlayer mediaPlayer;
-	JPanel panel;
+	JFrame frame;
 	String saveDirectory;
+	String outputVideo;
 
 	public AudioVideoMerger(ArrayList<AudioFile> audioFiles, String saveFileAs, String videoDirectory,
-			String saveDirectory, EmbeddedMediaPlayer mediaPlayer, JPanel panel) {
+			String saveDirectory, EmbeddedMediaPlayer mediaPlayer, JFrame frame) {
 		this.audioFiles = audioFiles;
 		this.videoDirectory = videoDirectory;
 		this.saveFileAs = saveFileAs;
 		this.saveDirectory = saveDirectory;
 		this.mediaPlayer = mediaPlayer;
-		this.panel = panel;
+		this.frame = frame;
 
 	}
 
@@ -47,8 +51,7 @@ public class AudioVideoMerger extends SwingWorker<Void, String> {
 	 */
 	@Override
 	protected Void doInBackground() throws Exception {
-		String outputVideo = saveDirectory + "/" + saveFileAs + ".mp4";
-		System.out.println(outputVideo);
+		outputVideo = saveDirectory + "/" + saveFileAs;
 		try {
 			
 			if (AudioEditor.keepYes.isSelected()) {
@@ -61,7 +64,7 @@ public class AudioVideoMerger extends SwingWorker<Void, String> {
 					}
 					String merge = "ffmpeg -y -i " + videoDirectory + " -i " + audioFiles.get(i).getAbsPath() + 
 							" -filter_complex \"[1:a]adelay=" + milliseconds + "[aud1];[aud1][0:a] amix=inputs=2\" "
-							+ outputVideo;
+							+ outputVideo + i + ".mp4";
 					ProcessBuilder pb = new ProcessBuilder("/bin/bash", "-c", merge);
 					Process proc = pb.start();
 					proc.waitFor();
@@ -73,31 +76,49 @@ public class AudioVideoMerger extends SwingWorker<Void, String> {
 					if (!(milliseconds > 0)) {
 						milliseconds = 15;
 					}
-					String merge = "ffmpeg -y -i " + outputVideo + " -i " + audioFiles.get(i).getAbsPath() + 
+					String merge = "ffmpeg -y -i " + outputVideo + (i-1) + ".mp4 -i " + audioFiles.get(i).getAbsPath() + 
 							" -filter_complex \"[1:a]adelay=" + milliseconds + "[aud1];[aud1][0:a] amix=inputs=2\" "
-							+ outputVideo;
+							+ outputVideo + i + ".mp4";
 					ProcessBuilder pb = new ProcessBuilder("/bin/bash", "-c", merge);
 					Process proc = pb.start();
 					proc.waitFor();
+					String remove = "rm " + outputVideo + (i-1) + ".mp4";
+					ProcessBuilder rm = new ProcessBuilder("/bin/bash", "-c", remove);
+					Process delete = rm.start();
+					delete.waitFor();
 				}
 			} else {
-				String strip = "ffmpeg -i " + videoDirectory + " -vcodec copy -an " + outputVideo;
-				ProcessBuilder p = new ProcessBuilder("/bin/bash", "-c", strip);
-				Process process = p.start();
-				process.waitFor();
-				for (int i = 0; i < audioFiles.size(); i++) {
+				for (int i = 0; i < 1; i++) {
 					int seconds = Integer.parseInt(audioFiles.get(i).getStartSecs());
 					int mins = Integer.parseInt(audioFiles.get(i).getStartMins());
 					int milliseconds = seconds*1000 + mins*10000;
 					if (!(milliseconds > 0)) {
 						milliseconds = 15;
 					}
-					String merge = "ffmpeg -y -i " + outputVideo + " -i " + audioFiles.get(i).getAbsPath() + 
-							" -filter_complex \"[1:a]adelay=" + milliseconds + "[aud1];[aud1][0:a] amix=inputs=2\" "
-							+ outputVideo;
+					String merge = "ffmpeg -y -i " + videoDirectory + " -itsoffset " + (milliseconds/1000) + " -i " 
+					+ audioFiles.get(i).getAbsPath() + " -map 0:0 -map 1:a -c:v copy -async 1 " + outputVideo + i + ".mp4";
 					ProcessBuilder pb = new ProcessBuilder("/bin/bash", "-c", merge);
 					Process proc = pb.start();
 					proc.waitFor();
+				}
+				for (int i = 1; i < audioFiles.size(); i++) {
+					int seconds = Integer.parseInt(audioFiles.get(i).getStartSecs());
+					int mins = Integer.parseInt(audioFiles.get(i).getStartMins());
+					int milliseconds = seconds*1000 + mins*10000;
+					if (!(milliseconds > 0)) {
+						milliseconds = 15;
+					}
+					String merge = "ffmpeg -y -i " + outputVideo + (i-1) + ".mp4 -i " + audioFiles.get(i).getAbsPath() + 
+							" -filter_complex \"[1:a]adelay=" + milliseconds + "[aud1];[aud1][0:a] amix=inputs=2\" "
+							+ outputVideo + i + ".mp4";
+					System.out.println(merge);
+					ProcessBuilder pb = new ProcessBuilder("/bin/bash", "-c", merge);
+					Process proc = pb.start();
+					proc.waitFor();
+					String remove = "rm " + outputVideo + (i-1) + ".mp4";
+					ProcessBuilder rm = new ProcessBuilder("/bin/bash", "-c", remove);
+					Process delete = rm.start();
+					delete.waitFor();
 				}
 				
 			}
@@ -112,7 +133,8 @@ public class AudioVideoMerger extends SwingWorker<Void, String> {
 
 	public void done() {
 		JOptionPane.showMessageDialog(null, "Your new video has been created");
-		mediaPlayer.playMedia(saveDirectory + "/" + saveFileAs + ".mp4");
+		MediaPlayer.btmpanel.timer();
+		mediaPlayer.playMedia(outputVideo + (audioFiles.size()-1) + ".mp4");
 	}
 
 }

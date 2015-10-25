@@ -8,10 +8,10 @@ import vidivox.AudioFile;
 
 public class AudioFileTableModel extends AbstractTableModel{
 	
-	private ArrayList<AudioFile> files;
+	public static ArrayList<AudioFile> files;
 
-    public AudioFileTableModel(ArrayList<AudioFile> files) {
-        this.files = new ArrayList<AudioFile>(files);
+    public AudioFileTableModel() {
+        files = new ArrayList<AudioFile>();
     }
 
     @Override
@@ -32,10 +32,10 @@ public class AudioFileTableModel extends AbstractTableModel{
                 name = "Audio Name";
                 break;
             case 1:
-                name = "Start Time";
+                name = "Start Minute";
                 break;
             case 2:
-            	name = "Edit";
+            	name = "Start Seconds";
         }
         return name;
     }

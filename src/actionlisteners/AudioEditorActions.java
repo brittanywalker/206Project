@@ -14,6 +14,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import guicomponents.AudioEditor;
 import guicomponents.EditingTable;
+import tablemodel.AudioFileTableModel;
 import vidivox.AudioFile;
 
 public class AudioEditorActions {
@@ -23,7 +24,6 @@ public class AudioEditorActions {
 	JFileChooser videoChooser;
 	JFileChooser audioChooser;
 	JFrame frame;
-	static ArrayList<AudioFile> audioFiles;
 	AudioFile audioFile;
 	String startMins;
 	String startSecs;
@@ -34,8 +34,7 @@ public class AudioEditorActions {
 		openActionListeners();
 		addAudioListener();
 		checkBoxListener();
-		audioFiles = new ArrayList<AudioFile>();
-		editor = new EditingTable(audioFiles);
+		editor = new EditingTable();
 	}
 
 	public void openActionListeners() {
@@ -83,10 +82,12 @@ public class AudioEditorActions {
 						startSecs = "0";
 					}
 					audioFile = new AudioFile(fullAudioDirectory, startMins, startSecs);
-					audioFiles.add(audioFile);
+					AudioFileTableModel.files.add(audioFile);
 					AudioEditor.startMins.setText("");
 					AudioEditor.startSecs.setText("");
 					AudioEditor.audioField.setText("");
+					editor.model.fireTableDataChanged();
+					
 
 				} else if ((AudioEditor.startMins.getText().equals("") || AudioEditor.startMins.getText() == null)
 						&& (AudioEditor.startSecs.getText().equals("") || AudioEditor.startSecs.getText() == null)) {

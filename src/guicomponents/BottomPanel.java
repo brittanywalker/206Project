@@ -19,6 +19,7 @@ import javax.swing.Timer;
 import actionlisteners.MediaPlayerActions;
 import uk.co.caprica.vlcj.binding.LibVlcConst;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
+import java.awt.Font;
 
 public class BottomPanel {
 
@@ -32,6 +33,7 @@ public class BottomPanel {
 	public ImageIcon pauseImage;
 	public ImageIcon unmuteImage;
 	public ImageIcon muteImage;
+	public ImageIcon fullScreenImage;
 	public JButton mute;
 	public JButton play;
 	public JButton fullScreen;
@@ -40,7 +42,7 @@ public class BottomPanel {
 	public JProgressBar progressBar;
 	public JLabel currentTime;
 	public JLabel endTime;
-	Timer time;
+	static Timer time;
 
 	public BottomPanel(JPanel panel, EmbeddedMediaPlayer mediaplayer) {
 		this.panel = panel;
@@ -52,14 +54,7 @@ public class BottomPanel {
 		bottomPanel.add(positionPanel, BorderLayout.NORTH);
 		bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
 		panel.add(bottomPanel, BorderLayout.SOUTH);
-
-		time = new Timer(200, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				beginProgress();
-			}
-		});
-		time.start();
+		timer();
 	}
 
 	public void createPanels() {
@@ -92,7 +87,7 @@ public class BottomPanel {
 		pauseImage = new ImageIcon("buttons/pause.png");
 		playImage = new ImageIcon("buttons/play.png");
 		play = new JButton(pauseImage);
-		ImageIcon fullScreenImage = new ImageIcon("buttons/fullscreen.png");
+		fullScreenImage = new ImageIcon("buttons/fullscreen.png");
 		fullScreen = new JButton(fullScreenImage);
 		volume = new JSlider();
 		openAudioEditor = new JButton("Open Audio Editor");
@@ -107,28 +102,36 @@ public class BottomPanel {
 
 	public void buttonPanelCharacteristics() {
 
-		mute.setPreferredSize(new Dimension(50, 50));
+		mute.setPreferredSize(new Dimension(30, 30));
 		mute.setToolTipText("Mute");
 		mute.setBackground(Color.darkGray);
-		play.setPreferredSize(new Dimension(50, 50));
+		mute.setBorderPainted(false);
+		
+		play.setPreferredSize(new Dimension(30, 30));
 		play.setToolTipText("Play/Pause");
 		play.setBackground(Color.darkGray);
-		fullScreen.setPreferredSize(new Dimension(50, 50));
+		play.setBorderPainted(false);
+		
+		fullScreen.setPreferredSize(new Dimension(30, 30));
 		fullScreen.setToolTipText("FullScreen");
 		fullScreen.setBackground(Color.darkGray);
+		fullScreen.setBorderPainted(false);
 		
 		volume.setOrientation(JSlider.HORIZONTAL);
 		volume.setMinimum(LibVlcConst.MIN_VOLUME);
 		volume.setMaximum(LibVlcConst.MAX_VOLUME);
-		volume.setPreferredSize(new Dimension(100, 50));
+		volume.setPreferredSize(new Dimension(100, 30));
 		volume.setOpaque(true);
 		volume.setBackground(Color.darkGray);
 		volume.setForeground(Color.WHITE);
 		volume.setToolTipText("Change Volume");
 		
 		openAudioEditor.setToolTipText("Use this to add mp3 files to a video of your choice");
-		openAudioEditor.setPreferredSize(new Dimension(50, 50));
-		openAudioEditor.setForeground(Color.darkGray);
+		openAudioEditor.setPreferredSize(new Dimension(170, 30));
+		openAudioEditor.setForeground(Color.WHITE);
+		openAudioEditor.setBackground(Color.darkGray);
+		openAudioEditor.setFont(new Font("Dialog", Font.BOLD, 11));
+		openAudioEditor.setBorderPainted(false);
 
 	}
 
@@ -163,7 +166,6 @@ public class BottomPanel {
 	}
 
 	public void beginProgress() {
-
 		if (MediaPlayerActions.currentVideoDirectory == null) {
 			progressBar.setValue(0);
 		} else {
@@ -180,5 +182,15 @@ public class BottomPanel {
 					 - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(videoLength)));
 			endTime.setText(eT);
 		}
+	}
+	
+	public void timer() {
+		time = new Timer(200, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				beginProgress();
+			}
+		});
+		time.start();
 	}
 }

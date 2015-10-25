@@ -20,6 +20,7 @@ import guicomponents.BottomPanel;
 import guicomponents.EditingTable;
 import guicomponents.MediaPlayer;
 import swingworker.AudioVideoMerger;
+import tablemodel.AudioFileTableModel;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
 public class MediaPlayerActions {
@@ -156,27 +157,6 @@ public class MediaPlayerActions {
 					mediaPlayer.pause();
 				}
 				window = new AddCommentary();
-			}
-		});
-
-		guicomponents.MediaPlayer.save.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String saveFileAs = JOptionPane.showInputDialog("What would you like to call your new video file? ");
-				if (AudioEditor.keepYes.isSelected() || AudioEditor.keepNo.isSelected()) {
-					UIManager.put("FileChooser.readOnly", Boolean.TRUE);
-					JFileChooser saveNewVideo = new JFileChooser();
-					saveNewVideo.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-					saveNewVideo.setAcceptAllFileFilterUsed(false);
-					if (saveNewVideo.showSaveDialog(panel) == JFileChooser.APPROVE_OPTION) {
-						String saveDirectory = saveNewVideo.getSelectedFile().getAbsolutePath();
-						AudioVideoMerger addAudio = new AudioVideoMerger(AudioEditorActions.audioFiles, saveFileAs, 
-								AudioEditorActions.fullVideoDirectory, saveDirectory, mediaPlayer, panel);
-								addAudio.execute();
-					}
-				} else {
-					JOptionPane.showMessageDialog(panel, "Please select whether you want to keep\nthe original audio of the video first.");
-				}
-						
 			}
 		});
 

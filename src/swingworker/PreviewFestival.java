@@ -85,7 +85,7 @@ public class PreviewFestival extends SwingWorker<Void, String> {
 				}
 			}
 		} else {
-			AddCommentary.btnSpeak.setIcon(AddCommentary.speakImage);
+			AddCommentary.btnSpeak.setText("Speak");
 		}
 	}
 }
